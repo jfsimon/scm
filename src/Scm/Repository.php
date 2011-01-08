@@ -45,6 +45,23 @@ class Repository extends Executor
         return new self(self::MERCURIAL, $directory, $options, $processCallback);
     }
 
+    public function setEnv(array $env=array())
+    {
+        if(isset($env['repository'])) {
+            static::$env->setRepository($env['repository']);
+        }
+
+        if(isset($env['branch'])) {
+            static::$env->setRepository($env['branch']);
+        }
+
+        if(isset($env['aliases'])) {
+            static::$env->setAliases($env['aliases']);
+        }
+
+        return $this;
+    }
+
     public function create()
     {
         return $this->callCommand('create', $this->options);
