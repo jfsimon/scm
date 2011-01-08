@@ -47,11 +47,13 @@ class Fetch extends Command implements CommandInterface
     {
         $command = 'git clone --recursive';
 
-        if($this->branch) {
-            $command .= ' --branch '.$this->branch;
+        $branch = static::$env->getBranch($this->branch);
+
+        if($branch) {
+            $command .= ' --branch '.$branch;
         }
 
-        $command .= ' '.$this->repository.' '.$this->directory;
+        $command .= ' '.static::$env->getAlias(static::$env->getRepository($this->repository)).' '.$this->directory;
 
         return $this->runProcess($command);
     }

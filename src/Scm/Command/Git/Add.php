@@ -28,7 +28,7 @@ class Add extends Command implements CommandInterface
             $command .= ' -v';
         }
 
-        $command .= ' \''.$this->path.'\'';
+        $command .= ' \''.static::$env->getAlias($this->path).'\'';
 
         $this->runProcess($command, $processCallback);
     }

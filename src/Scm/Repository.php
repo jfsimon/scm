@@ -5,23 +5,20 @@ namespace Scm;
 use Scm\Exception\CommandFailedException;
 use Scm\Log\Log;
 
-class Repository
+class Repository extends Executor
 {
     const GIT = 'Git';
     const SUBVERSION = 'Subversion';
     const MERCURIAL = 'Mercurial';
 
-    public $log;
-
     protected $system;
     protected $directory;
-
     protected $processCallback;
     protected $options;
 
     public function __construct($system, $directory, array $options=array(), $processCallback=null)
     {
-        $this->log = new Log();
+        parent::__construct();
 
         $this->system = $system;
         $this->directory = $directory;

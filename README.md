@@ -1,9 +1,8 @@
 Control your SCM with PHP
 =========================
 
-**Note 1 : this library is under active developpement, it's just a draft for now.**
-
-**Note 2 : feel free to tell how you feel with this architecture, the debate is open.**
+**This library is under active developpement, it's just a draft for now ;
+feel free to tell how you feel with this architecture, the debate is wild open.**
 
 
 What is the goal ?
@@ -19,9 +18,8 @@ How to use current implementation ?
 
 An exemple :
 
-    $url = 'http://my/ditant/repository.git';
-
-    $repos = Repository::git('/path/to/my/folder')
-        ->fetch($url)
+    $repos = Repository::git('/path/to/my/folder', array('verbose' => false))
+        ->alias('origin', 'http://my/ditant/repository.git')
+        ->fetch('origin')
         ->add('.')
-        ->commit($url);
+        ->commit('origin');

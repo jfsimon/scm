@@ -49,8 +49,10 @@ class Commit extends Command implements CommandInterface
             $command .= ' -v';
         }
 
-        if($this->branch) {
-            $command .= ' '.$this->repository.' '.$this->branch;
+        $branch = static::$env->getBranch($this->branch);
+
+        if($branch) {
+            $command .= ' '.static::$env->getAlias(static::$env->getRepository($this->repository)).' '.$branch;
         }
 
         $this->runProcess($command, $processCallback);

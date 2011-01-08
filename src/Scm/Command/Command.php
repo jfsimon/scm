@@ -2,19 +2,19 @@
 
 namespace Scm\Command;
 
+use Scm\Executor;
 use Scm\Log\Log;
 use Scm\Log\LogEntry;
 
-abstract class Command
+abstract class Command extends Executor
 {
-    public $log;
-
     protected $directory;
     protected $options;
 
     public function __construct($directory, array $options=array())
     {
-        $this->log = new Log();
+        parent::__construct();
+
         $this->directory = $directory;
         $this->options = array_merge(array(
             'verbose' => true,
