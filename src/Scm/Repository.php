@@ -17,9 +17,9 @@ class Repository
     protected $directory;
 
     protected $processCallback;
-    protected $failSilently;
+    protected $options;
 
-    public function __construct($system, $directory, $processCallback=null, $failSilently=false)
+    public function __construct($system, $directory, array $options=array(), $processCallback=null)
     {
         $this->log = new Log();
 
@@ -27,32 +27,35 @@ class Repository
         $this->directory = $directory;
 
         $this->processCallback = $processCallback;
-        $this->failSilently = $failSilently;
+        $this->options = array_merge(array(
+            'fail-silently' => false,
+            'verbose' => true,
+        ), $options);
     }
 
-    static public function git($directory, $processCallback=null, $failSilently=false)
+    static public function git($directory, array $options=array(), $processCallback=null)
     {
-        return new self(self::GIT, $directory, $processCallback, $failSilently);
+        return new self(self::GIT, $directory, $options, $processCallback);
     }
 
-    static public function subversion($directory, $processCallback=null, $failSilently=false)
+    static public function subversion($directory, array $options=array(), $processCallback=null)
     {
-        return new self(self::SUBVERSION, $directory, $processCallback, $failSilently);
+        return new self(self::SUBVERSION, $directory, $options, $processCallback);
     }
 
-    static public function mercurial($directory, $processCallback=null, $failSilently=false)
+    static public function mercurial($directory, array $options=array(), $processCallback=null)
     {
-        return new self(self::MERCURIAL, $directory, $processCallback, $failSilently);
+        return new self(self::MERCURIAL, $directory, $options, $processCallback);
     }
 
     public function create()
     {
-        return $this->callCommand('create');
+        return $this->callCommand('create', $this->options);
     }
 
     public function fetch($repository, $branch=null)
     {
-        return $this->callCommand('fetch', array(
+        return $this->callCommand('fetch', $this->options, array(
             'repository' => $repository,
             'branch' => $branch
         ));
@@ -60,14 +63,14 @@ class Repository
 
     public function add($directory)
     {
-        return $this->callCommand('add', array(
+        return $this->callCommand('add', $this->options, array(
             'directory' => $directory
         ));
     }
 
     public function commit($message, $branch=null)
     {
-        return $this->callCommand('commit', array(
+        return $this->callCommand('commit', $this->options, array(
             'message' => $message,
             'branch' => $branch
         ));
@@ -83,14 +86,14 @@ class Repository
         $this->processCallback = $processCallback;
     }
 
-    public function getFailSilently()
+    public function getOptions()
     {
-        return $this->failSilently;
+        return $this->options;
     }
 
-    public function setFailSilently($failSilently)
+    public function setOptions($options)
     {
-        $this->failSilently = $failSilently;
+        $this->options = $options;
     }
 
     protected function getCommand($command)
@@ -99,9 +102,9 @@ class Repository
         return new $class($this->directory);
     }
 
-    protected function callCommand($name, array $parameters=array())
+    protected function callCommand($name, array $options, array $parameters=array())
     {
-        $command = $this->getCommand($name);
+        $command = $this->getCommand($name, $options);
 
         foreach($parameters as $name => $value) {
             $method = 'set'.ucfirst($name);
@@ -110,7 +113,7 @@ class Repository
 
         $success = $command->execute($this->processCallback);
 
-        if(! $this->failSilently) {
+        if(! $this->options['fail-silently']) {
             throw new CommandFailedException($command, $command->log);
         }
 

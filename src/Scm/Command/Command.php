@@ -8,17 +8,32 @@ use Scm\Log\LogEntry;
 abstract class Command
 {
     public $log;
-    protected $directory;
 
-    public function __construct($directory)
+    protected $directory;
+    protected $options;
+
+    public function __construct($directory, array $options=array())
     {
         $this->log = new Log();
         $this->directory = $directory;
+        $this->options = array_merge(array(
+            'verbose' => true,
+        ), $options);
     }
 
     public function getDirectory()
     {
         return $this->directory;
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    public function setOptions($options)
+    {
+        $this->options = $options;
     }
 
     public function __toString()

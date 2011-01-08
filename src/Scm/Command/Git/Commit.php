@@ -43,7 +43,11 @@ class Commit extends Command implements CommandInterface
 
     protected function executePull($processCallback=null)
     {
-        $command = 'git push -v -f ';
+        $command = 'git push -f ';
+
+        if($this->options['verbose']) {
+            $command .= ' -v';
+        }
 
         if($this->branch) {
             $command .= ' '.$this->repository.' '.$this->branch;

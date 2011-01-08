@@ -22,7 +22,13 @@ class Add extends Command implements CommandInterface
     {
         $this->makeDirectory();
 
-        $command = 'git add -v --ignore-errors --ignore-missing \''.$this->path.'\'';
+        $command = 'git add --ignore-errors --ignore-missing';
+
+        if($this->options['verbose']) {
+            $command .= ' -v';
+        }
+
+        $command .= ' \''.$this->path.'\'';
 
         $this->runProcess($command, $processCallback);
     }
