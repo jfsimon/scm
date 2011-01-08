@@ -59,10 +59,10 @@ The `Repository` class represents a local repository and is the start point for 
 
 ###Available commands
 
--  `**create**()`: creates the repository (if not exists)
--  `**fetch**($repository, $branch=null)`: fetches a distant repository
--  `**add**($file)`: adds a file or directory to SCM control
--  `**commit**($message='no message', $repository=null, $branch=null)`: commits current state to distant repository
--  `**unsuscribe**()`: removes all SCM files
--  `**mutate**($system)`: switch from current SCM to given SCM
--  `**move**($directory)`: moves local repository to given directory
+-  `create()`: creates the repository (if not exists)
+-  `fetch($repository, $branch=null)`: fetches a distant repository
+-  `add($file)`: adds a file or directory to SCM control
+-  `commit($message='no message', $repository=null, $branch=null)`: commits current state to distant repository
+-  `unsuscribe()`: removes all SCM files
+-  `mutate($system)`: switch from current SCM to given SCM
+-  `move($directory)`: moves local repository to given directory
