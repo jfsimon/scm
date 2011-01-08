@@ -28,12 +28,14 @@ An exemple:
         ->add('.')
         ->commit()
     ;
+    
+**Run the tests:** just launch `phpunit` in the root directory.
         
         
 Executor classes
 ----------------
 
-`Command` and `Repository` classes are `Executor`. Each `Executor` classes provide $log and $env public member.
+`Command` and `Repository` classes are `Executor`. Each `Executor` class provide $log and $env public member.
 
 
 ###Log class
@@ -41,7 +43,7 @@ Executor classes
 Log class is used to log all that append. Feel free to write this into a file or echo from a command line task.
 
 
-###Env class
+###Env class (shared)
 
 Env class handle environment and is used to:
 
@@ -57,10 +59,10 @@ The `Repository` class represents a local repository and is the start point for 
 
 ###Available commands
 
--  **create**(): creates the repository (if not exists)
--  **fetch**($repository, $branch=null): fetches a distant repository
--  **add**($file): adds a file or directory to SCM control
--  **commit**($message='no message', $repository=null, $branch=null): commits current state to distant repository
--  **unsuscribe**(): removes all SCM files
--  **mutate**($system): switch from current SCM to given SCM
--  **move**($directory): moves local repository to given directory
+-  `**create**()`: creates the repository (if not exists)
+-  `**fetch**($repository, $branch=null)`: fetches a distant repository
+-  `**add**($file)`: adds a file or directory to SCM control
+-  `**commit**($message='no message', $repository=null, $branch=null)`: commits current state to distant repository
+-  `**unsuscribe**()`: removes all SCM files
+-  `**mutate**($system)`: switch from current SCM to given SCM
+-  `**move**($directory)`: moves local repository to given directory
