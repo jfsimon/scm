@@ -4,7 +4,7 @@ namespace Scm\Command\Subversion;
 
 use Scm\Command\Command as BaseCommand;
 
-class Command extends BaseCommand
+abstract class Command extends BaseCommand
 {
     protected function isRepository($directory=null)
     {

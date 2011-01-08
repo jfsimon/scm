@@ -1,6 +1,6 @@
 <?php
 
-namespace Scm\Log;
+namespace Scm\Executor;
 
 class LogEntry
 {
@@ -32,5 +32,10 @@ class LogEntry
     public function getTimestamp()
     {
         return $this->timestamp;
+    }
+
+    public function __toString()
+    {
+        return date('c', $this->timestamp).' ['.strtoupper($this->type).'] '.$this->message;
     }
 }

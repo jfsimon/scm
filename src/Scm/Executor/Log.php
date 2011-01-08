@@ -1,10 +1,10 @@
 <?php
 
-namespace Scm\Log;
+namespace Scm\Executor;
 
-use Scm\Log\LogEntry;
+use Scm\Executor\LogEntry;
 
-class Log
+class Log implements \IteratorAggregate
 {
     protected $entries;
 
@@ -41,6 +41,22 @@ class Log
     public function compareEntries(LogEntry $a, LogEntry $b)
     {
         return $a->getTimestamp() > $b->getTimestamp();
+    }
+
+    public function getIterator()
+    {
+        return $this->entries;
+    }
+
+    public function __toString()
+    {
+        $strings = array();
+
+        foreach($this->entries as $entry) {
+            $strings[] = $entry->__toString();
+        }
+
+        return implode("\n", $strings);
     }
 
     protected function order()

@@ -1,6 +1,6 @@
 <?php
 
-namespace Scm\Env;
+namespace Scm\Executor;
 
 class Env
 {
@@ -13,6 +13,11 @@ class Env
         $this->aliases = array();
         $this->repository = null;
         $this->branch = null;
+    }
+
+    public function getAliases()
+    {
+        return $this->aliases;
     }
 
     public function getAlias($alias, $default=null)
@@ -30,12 +35,17 @@ class Env
         return $branch ? $branch : $this->branch;
     }
 
-    public function setAlias($aliases, $value)
+    public function setAliases(array $aliases)
+    {
+        $this->aliases = $aliases;
+    }
+
+    public function setAlias($alias, $value)
     {
         $this->aliases[$alias] = $value;
     }
 
-    public function setRepository($repository)
+	public function setRepository($repository)
     {
         $this->repository = $repository;
     }

@@ -2,9 +2,7 @@
 
 namespace Scm\Command;
 
-use Scm\Executor;
-use Scm\Log\Log;
-use Scm\Log\LogEntry;
+use Scm\Executor\Executor;
 
 abstract class Command extends Executor
 {

@@ -2,14 +2,17 @@
 
 namespace Scm;
 
+use Scm\Executor\Executor;
 use Scm\Exception\CommandFailedException;
-use Scm\Log\Log;
+use Scm\Executor\LogEntry;
 
 class Repository extends Executor
 {
     const GIT = 'Git';
     const SUBVERSION = 'Subversion';
     const MERCURIAL = 'Mercurial';
+
+    public $ignore;
 
     protected $system;
     protected $directory;
@@ -20,10 +23,12 @@ class Repository extends Executor
     {
         parent::__construct();
 
+        $this->ignore = $this->getIgnore();
+
         $this->system = $system;
         $this->directory = $directory;
-
         $this->processCallback = $processCallback;
+
         $this->options = array_merge(array(
             'fail-silently' => false,
             'verbose' => true,
@@ -67,7 +72,7 @@ class Repository extends Executor
         return $this->callCommand('create', $this->options);
     }
 
-    public function fetch($repository, $branch=null)
+    public function fetch($repository=null, $branch=null)
     {
         return $this->callCommand('fetch', $this->options, array(
             'repository' => $repository,
@@ -75,19 +80,56 @@ class Repository extends Executor
         ));
     }
 
-    public function add($directory)
+    public function add($file)
     {
         return $this->callCommand('add', $this->options, array(
-            'directory' => $directory
+            'file' => $file
         ));
     }
 
-    public function commit($message, $branch=null)
+    public function commit($message='no message', $repository=null, $branch=null)
     {
         return $this->callCommand('commit', $this->options, array(
             'message' => $message,
+            'repository' => $repository,
             'branch' => $branch
         ));
+    }
+
+    public function unsuscribe()
+    {
+        return $this->callCommand('unsuscribe', $this->options);
+    }
+
+    public function mutate($system)
+    {
+        static::$env = new Env();
+
+        $this->ignore->read();
+        $this->unsuscribe();
+        $this->system = $system;
+        $this->create();
+        $this->add('.');
+        $this->ignore->write();
+
+        return $this;
+    }
+
+    public function move($directory, $force=false)
+    {
+        if(file_exists($directory)) {
+            if($force) {
+                $this->removeFiles($directory);
+            } else {
+                $this->runtimeException(LogEntry::ERROR, 'Cannot move repository from "'.$this->directory.'" to existing file "'.$directory.'"');
+            }
+        }
+
+        if(rename($this->directory, $directory)) {
+            $this->directory = $directory;
+        }
+
+        return $this;
     }
 
     public function getProcessCallback()
@@ -95,9 +137,11 @@ class Repository extends Executor
         return $this->processCallback;
     }
 
-    public function setProcessCallback($processCallback)
+    public function setProcessCallback($processCallback=null)
     {
         $this->processCallback = $processCallback;
+
+        return $this;
     }
 
     public function getOptions()
@@ -108,6 +152,14 @@ class Repository extends Executor
     public function setOptions($options)
     {
         $this->options = $options;
+
+        return $this;
+    }
+
+    protected function getIgnore()
+    {
+        $class = 'Scm\Ignore\\'.$this->system.'Ignore';
+        return new $class($this->directory);
     }
 
     protected function getCommand($command)
@@ -116,7 +168,7 @@ class Repository extends Executor
         return new $class($this->directory);
     }
 
-    protected function callCommand($name, array $options, array $parameters=array())
+    protected function callCommand($name, array $options=array(), array $parameters=array())
     {
         $command = $this->getCommand($name, $options);
 
@@ -135,4 +187,6 @@ class Repository extends Executor
 
         return $this;
     }
+
+
 }
