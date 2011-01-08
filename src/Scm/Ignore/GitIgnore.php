@@ -2,7 +2,7 @@
 
 namespace Scm\Ignore;
 
-class GitIgnore extends Ignore implements IgnoreInterface, IteratorAggregate
+class GitIgnore extends Ignore implements IgnoreInterface, \IteratorAggregate
 {
     public function read()
     {

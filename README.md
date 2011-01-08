@@ -1,18 +1,18 @@
 Control your SCM with PHP
 =========================
 
+A cross SCM systems (Git, Subversion, Mercurial) abstraction library written in PHP.
+
 **Biohazard : untested library, don't use at home**
 
 *This library is under active developpement, it's just a draft for now ;
 feel free to tell how you feel with this architecture, the debate is wild open.*
 
 
-What is the goal ?
-------------------
+Currently implemented
+---------------------
 
-The goal is to get a library with *simple* commands to *basicaly* manage repositories.
 
-I think it could start by handling Git, Subversion and Mercurial.
 
 
 How to use current implementation ?
@@ -20,11 +20,14 @@ How to use current implementation ?
 
 An exemple:
 
-    $repos = Repository::git('/path/to/my/folder', array('verbose' => false))
+    $repos = new Repository(Repôsitory::GIT, '/path/to/my/folder', array('verbose' => false));
+    
+    $repos
         ->setEnv(array('repository' => 'http://my/ditant/repository.git', 'branch' => 'master'))
         ->fetch()
         ->add('.')
-        ->commit();
+        ->commit()
+    ;
         
         
 Executor classes
@@ -50,7 +53,7 @@ Env class handle environment and is used to:
 One class to rule them all
 --------------------------
 
-The main class is the `Repository` class, it represents a local repository.
+The `Repository` class represents a local repository and is the start point for all your needs.
 
 ###Available commands
 

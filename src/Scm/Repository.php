@@ -22,9 +22,6 @@ class Repository extends Executor
     public function __construct($system, $directory, array $options=array(), $processCallback=null)
     {
         parent::__construct();
-
-        $this->ignore = $this->getIgnore();
-
         $this->system = $system;
         $this->directory = $directory;
         $this->processCallback = $processCallback;
@@ -33,21 +30,8 @@ class Repository extends Executor
             'fail-silently' => false,
             'verbose' => true,
         ), $options);
-    }
 
-    static public function git($directory, array $options=array(), $processCallback=null)
-    {
-        return new self(self::GIT, $directory, $options, $processCallback);
-    }
-
-    static public function subversion($directory, array $options=array(), $processCallback=null)
-    {
-        return new self(self::SUBVERSION, $directory, $options, $processCallback);
-    }
-
-    static public function mercurial($directory, array $options=array(), $processCallback=null)
-    {
-        return new self(self::MERCURIAL, $directory, $options, $processCallback);
+        $this->ignore = $this->getIgnore();
     }
 
     public function setEnv(array $env=array())
