@@ -6,14 +6,23 @@ class StringsFile implements \IteratorAggregate
 {
     protected $file;
 
-    public function __construct($file, $autoClean=false, $uniqueClean=false)
+    public function __construct($file, $force=false, $autoClean=false, $uniqueClean=false)
     {
         if(! file_exists($file)) {
-            throw new \RuntimeException('file "'.$file.'" does not exixts');
+            if($force) {
+                touch($file);
+            } else {
+                throw new \RuntimeException('file "'.$file.'" does not exixts');
+            }
         }
 
-        if(! is_file($file)) {
-            throw new \RuntimeException('"'.$file.'" is not a file');
+        if(is_dir($file)) {
+            if($force) {
+                $dir = new Directory($file);
+                $dir->remove();
+            } else {
+                throw new \RuntimeException('"'.$file.'" is a directory');
+            }
         }
 
         $this->file = $file;

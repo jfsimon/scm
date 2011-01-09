@@ -30,21 +30,4 @@ abstract class Executor
             throw new \RuntimeException('['.$type.']: '.$message);
         }
     }
-
-    protected function removeFiles($directory, array $masks=array())
-    {
-        $finder = new Finder();
-
-        foreach($masks as $mask) {
-            $finder->name($mask);
-        }
-
-        foreach($finder->files() as $file) {
-            unlink($file);
-        }
-
-        foreach($finder->directories() as $directory) {
-            @rmdir($directory);
-        }
-    }
 }

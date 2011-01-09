@@ -2,6 +2,7 @@
 
 namespace Scm\Command\Git;
 
+use Scm\Command\Command;
 use Scm\Command\CommandInterface;
 
 class Create extends Command implements CommandInterface

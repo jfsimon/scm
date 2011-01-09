@@ -5,7 +5,7 @@ namespace Scm\Command\Git;
 use Scm\Command\Command;
 use Scm\Command\CommandInterface;
 
-class Add extends Command implements CommandInterface
+class Sub extends Command implements CommandInterface
 {
     protected $path;
 
@@ -25,13 +25,7 @@ class Add extends Command implements CommandInterface
             return;
         }
 
-        $command = 'git add --ignore-errors --ignore-missing';
-
-        if($this->options['verbose']) {
-            $command .= ' -v';
-        }
-
-        $command .= ' \''.$this->path.'\'';
+        $command = 'git rm -rf --ignore-unmatch '.$this->path;
 
         $this->runProcess($command, $processCallback);
     }

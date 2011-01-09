@@ -2,6 +2,7 @@
 
 namespace Scm\Command\Git;
 
+use Scm\Command\Command;
 use Scm\Command\CommandInterface;
 
 class Fetch extends Command implements CommandInterface
@@ -16,7 +17,7 @@ class Fetch extends Command implements CommandInterface
 
     public function setRepository($repository)
     {
-        $this->repository = $repository;
+        $this->repository = $this->getRealRepository($repository);
     }
 
     public function getBranch()
@@ -26,7 +27,7 @@ class Fetch extends Command implements CommandInterface
 
     public function setBranch($branch)
     {
-        $this->branch = $branch;
+        $this->branch = $this->getRealBranch($branch);
     }
 
     public function execute($processCallback=null)
@@ -47,14 +48,20 @@ class Fetch extends Command implements CommandInterface
     {
         $command = 'git clone --recursive';
 
-        $branch = static::$env->getBranch($this->branch);
-
-        if($branch) {
-            $command .= ' --branch '.$branch;
+        if($this->branch) {
+            $command .= ' --branch '.$this->branch;
         }
 
-        $command .= ' '.static::$env->getAlias(static::$env->getRepository($this->repository)).' '.$this->directory;
+        $command .= ' '.$this->repository.' '.$this->directory;
 
         return $this->runProcess($command);
+    }
+
+    protected function isRepository($directory=null)
+    {
+        $directory = is_null($directory) ? $this->directory : $directory;
+        $test = $directory.DIRECTORY_SEPARATOR.'.git';
+
+        return file_exists($test) && is_dir($test);
     }
 }

@@ -15,6 +15,24 @@ class Env
         $this->branch = null;
     }
 
+    public function getRealPath($path)
+    {
+        $bits = explode('/', $path);
+        $bits[0] = $this->getAlias($bits[0], $bits[0]);
+
+        return implode('/', $bits);
+    }
+
+    public function getRealRepository($repository)
+    {
+        return $this->getAlias($repository, $this->getRepository($repository));
+    }
+
+    public function getRealBranch($branch)
+    {
+        return $this->getAlias($branch, $this->getBranch($branch));
+    }
+
     public function getAliases()
     {
         return $this->aliases;

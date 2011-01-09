@@ -2,6 +2,7 @@
 
 namespace Scm\Command\Git;
 
+use Scm\Command\Command;
 use Scm\Command\CommandInterface;
 
 class Unsuscribe extends Command implements CommandInterface

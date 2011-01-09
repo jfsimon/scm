@@ -31,58 +31,53 @@ class Repository extends Executor
             'verbose' => true,
         ), $options);
 
-        $this->ignore = $this->getIgnore();
-    }
-
-    public function setEnv(array $env=array())
-    {
-        if(isset($env['repository'])) {
-            static::$env->setRepository($env['repository']);
-        }
-
-        if(isset($env['branch'])) {
-            static::$env->setRepository($env['branch']);
-        }
-
-        if(isset($env['aliases'])) {
-            static::$env->setAliases($env['aliases']);
-        }
-
-        return $this;
+        $this->ignore = $this->getIgnoreObject();
     }
 
     public function create()
     {
-        return $this->callCommand('create', $this->options);
+        $this->callCommand('create', $this->options);
+
+        return $this;
     }
 
     public function fetch($repository=null, $branch=null)
     {
-        return $this->callCommand('fetch', $this->options, array(
+        $this->callCommand('fetch', $this->options, array(
             'repository' => $repository,
             'branch' => $branch
         ));
+
+        return $this;
     }
 
-    public function add($file)
+    public function add($path=null)
     {
-        return $this->callCommand('add', $this->options, array(
-            'file' => $file
+        $this->callCommand('add', $this->options, array(
+            'path' => $path
         ));
+
+        return $this;
     }
 
     public function commit($message='no message', $repository=null, $branch=null)
     {
-        return $this->callCommand('commit', $this->options, array(
+        $this->callCommand('commit', $this->options, array(
             'message' => $message,
             'repository' => $repository,
             'branch' => $branch
         ));
+
+        return $this;
     }
 
-    public function unsuscribe()
+    public function unsuscribe($path=null)
     {
-        return $this->callCommand('unsuscribe', $this->options);
+        $this->callCommand('unsuscribe', $this->options, array(
+            'path' => $path
+        ));
+
+        return $this;
     }
 
     public function mutate($system)
@@ -116,6 +111,37 @@ class Repository extends Executor
         return $this;
     }
 
+    public function getBranches()
+    {
+        return $this->getStatusCommandResult('branches', $this->options);
+    }
+
+    public function getCommits()
+    {
+        return $this->getStatusCommandResult('commits', $this->options);
+    }
+
+    public function getModifiedFiles()
+    {
+        return $this->getInfosCommandResult('status', $this->options, array(
+            'section' => 'modified'
+        ));
+    }
+
+    public function getDeletedFiles()
+    {
+        return $this->getInfosCommandResult('status', $this->options, array(
+            'section' => 'deleted'
+        ));
+    }
+
+    public function getUntrackedFiles()
+    {
+        return $this->getInfosCommandResult('status', $this->options, array(
+            'section' => 'untracked'
+        ));
+    }
+
     public function getProcessCallback()
     {
         return $this->processCallback;
@@ -140,13 +166,30 @@ class Repository extends Executor
         return $this;
     }
 
-    protected function getIgnore()
+    public function setEnv(array $env=array())
+    {
+        if(isset($env['repository'])) {
+            static::$env->setRepository($env['repository']);
+        }
+
+        if(isset($env['branch'])) {
+            static::$env->setRepository($env['branch']);
+        }
+
+        if(isset($env['aliases'])) {
+            static::$env->setAliases($env['aliases']);
+        }
+
+        return $this;
+    }
+
+    protected function getIgnoreObject()
     {
         $class = 'Scm\Ignore\\'.$this->system.'Ignore';
         return new $class($this->directory);
     }
 
-    protected function getCommand($command)
+    protected function getCommandObject($command)
     {
         $class = 'Scm\Command\\'.$this->system.'\\'.ucfirst($command);
         return new $class($this->directory);
@@ -154,7 +197,7 @@ class Repository extends Executor
 
     protected function callCommand($name, array $options=array(), array $parameters=array())
     {
-        $command = $this->getCommand($name, $options);
+        $command = $this->getCommandObject($name, $options);
 
         foreach($parameters as $name => $value) {
             $method = 'set'.ucfirst($name);
@@ -163,14 +206,20 @@ class Repository extends Executor
 
         $success = $command->execute($this->processCallback);
 
-        if(! $this->options['fail-silently']) {
+        if(! ($success || $this->options['fail-silently'])) {
             throw new CommandFailedException($command, $command->log);
         }
 
         $this->log->merge($command->log);
 
-        return $this;
+        return $command;
     }
 
+    protected function getInfosCommandResult($name, array $options=array(), array $parameters=array())
+    {
+        $name = $name.'Infos';
+        $command = $this->callCommand($name, $options, $parameters);
 
+        return $command->getResult();
+    }
 }

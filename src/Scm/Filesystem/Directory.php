@@ -30,13 +30,13 @@ class Directory
 
     public function move($directory)
     {
-        rename($this->directory, $this->getDirectory($directory));
+        rename($this->directory, $this->getRealDirectory($directory));
     }
 
     public function removeDirectory($directory=null)
     {
         $finder = new Finder();
-        $finder->in($this->getDirectory($directory));
+        $finder->in($this->getRealDirectory($directory));
 
         foreach($finder->files() as $file) {
             unlink($file);
@@ -52,7 +52,7 @@ class Directory
     public function removeFiles(array $matches=array(), $directory=null)
     {
         $finder = new Finder();
-        $finder->files()->in($this->getDirectory($directory));
+        $finder->files()->in($this->getRealDirectory($directory));
 
         foreach($matches as $match) {
             $finder->name($match);
@@ -66,19 +66,19 @@ class Directory
     public function removeEmptyDirectories($directory=null)
     {
         $finder = new Finder();
-        $finder->directories()->in($this->getDirectory($directory));
+        $finder->directories()->in($this->getRealDirectory($directory));
 
         foreach($finder as $dir) {
-            if($this->isEmptyDirectory($dir)) {
+            if($this->isEmpty($dir)) {
                 rmdir($dir);
             }
         }
     }
 
-    public function isEmptyDirectory($directory=null)
+    public function isEmpty($directory=null)
     {
         $finder = new Finder();
-        $finder->in($this->getDirectory($directory));
+        $finder->in($this->getRealDirectory($directory));
 
         foreach($finder as $file) {
             return false;
@@ -87,7 +87,7 @@ class Directory
         return true;
     }
 
-    protected function getDirectory($directory)
+    protected function getRealDirectory($directory)
     {
         return is_null($directory) ? $this->directory : (substr($directory, 0, 1) === '/' ? $directory : $this->directory.'/'.$directory);
     }

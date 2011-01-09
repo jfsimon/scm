@@ -2,11 +2,13 @@
 
 namespace Scm\Command\Git;
 
+use Scm\Command\Command;
 use Scm\Command\CommandInterface;
 
 class Commit extends Command implements CommandInterface
 {
     protected $message;
+    protected $repository;
     protected $branch;
 
     public function getMessage()
@@ -19,14 +21,24 @@ class Commit extends Command implements CommandInterface
         $this->message = $message;
     }
 
-    public function getBranch()
+    public function getRepository()
     {
         return $this->repository;
     }
 
+    public function setRepository($repository)
+    {
+        $this->repository = $this->getRealRepository($repository);
+    }
+
+	public function getBranch()
+    {
+        return $this->branch;
+    }
+
     public function setBranch($branch)
     {
-        $this->branch = $branch;
+        $this->branch = $this->getRealBranch($branch);
     }
 
     public function execute($processCallback=null)
@@ -49,10 +61,8 @@ class Commit extends Command implements CommandInterface
             $command .= ' -v';
         }
 
-        $branch = static::$env->getBranch($this->branch);
-
-        if($branch) {
-            $command .= ' '.static::$env->getAlias(static::$env->getRepository($this->repository)).' '.$branch;
+        if($this->branch) {
+            $command .= ' '.$this->repository.' '.$this->branch;
         }
 
         $this->runProcess($command, $processCallback);
