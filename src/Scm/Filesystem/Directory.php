@@ -2,8 +2,6 @@
 
 namespace Scm\Filesystem;
 
-use Symfony\Component\Finder;
-
 use Symfony\Component\Finder\Finder;
 
 class Directory
@@ -35,8 +33,10 @@ class Directory
 
     public function removeDirectory($directory=null)
     {
+        $directory = $this->getRealDirectory($directory);
+
         $finder = new Finder();
-        $finder->in($this->getRealDirectory($directory));
+        $finder->in($directory);
 
         foreach($finder->files() as $file) {
             unlink($file);

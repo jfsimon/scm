@@ -2,6 +2,8 @@
 
 namespace Scm\Ignore;
 
+use Scm\Filesystem\StringsFile;
+
 class GitIgnore extends Ignore implements IgnoreInterface, \IteratorAggregate
 {
     protected $file;
@@ -9,26 +11,30 @@ class GitIgnore extends Ignore implements IgnoreInterface, \IteratorAggregate
     public function __construct($directory)
     {
         parent::__construct($directory);
-        $this->file = new StringsFile($this->directory.DIRECTORY_SEPARATOR.'.gitignore');
+        $this->file = $directory.DIRECTORY_SEPARATOR.'.gitignore';
     }
 
     public function read()
     {
-        $this->cache = $this->file->read();
+        $file = new StringsFile($this->file);
+        $this->cache = $file->read();
     }
 
     public function write()
     {
-        $this->file->write($this->cache, true, true);
+        $file = new StringsFile($this->file);
+        $file->write($this->cache, true, true);
     }
 
     protected function writeOne($mask)
     {
-        $this->file->append($mask, true);
+        $file = new StringsFile($this->file);
+        $file->append($mask, true);
     }
 
     protected function removeOne($mask)
     {
-        $this->file->remove($mask);
+        $file = new StringsFile($this->file);
+        $file->remove($mask);
     }
 }

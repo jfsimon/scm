@@ -21,7 +21,7 @@ class StringsFile implements \IteratorAggregate
                 $dir = new Directory($file);
                 $dir->remove();
             } else {
-                throw new \RuntimeException('"'.$file.'" is a directory');
+                throw new \RuntimeException('cannot open file : "'.$file.'" is a directory');
             }
         }
 

@@ -9,7 +9,7 @@ class RepositoryInstantiationTest extends ScmTestCase
 {
     public function testGitRepositoryInstantiation()
     {
-        $repository = new Repository(Repository::GIT, '/tmp');
+        $repository = new Repository(Repository::GIT, $this->makeDirectory());
     }
 
 //    public function testSubversionRepositoryInstantiation()

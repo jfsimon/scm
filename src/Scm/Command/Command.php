@@ -4,8 +4,6 @@ namespace Scm\Command;
 
 use Scm\Filesystem;
 
-use Scm\Executor;
-
 use Scm\Executor\Executor;
 use Scm\Exception\PathNotFoundException;
 use Scm\Executor\LogEntry;
