@@ -7,9 +7,11 @@ use Scm\Filesystem\Directory;
 
 class ScmTestCase extends \PHPUnit_Framework_TestCase
 {
-    protected function makeDirectory()
+    const TEST_DIRECTORY = '/tmp/scm-tests';
+
+    protected function makeTestDirectory()
     {
-        $directory = '/tmp/scm-tests';
+        $directory = self::TEST_DIRECTORY;
 
         if(realpath($directory)) {
             $dir = new Directory($directory);
@@ -39,5 +41,13 @@ class ScmTestCase extends \PHPUnit_Framework_TestCase
         }
 
         return $classes;
+    }
+
+    protected function makeTestDirectoryStructure()
+    {
+        $directory = self::DATA_DIR.'/directory';
+        copy($directory, $this->makeTestDirectory());
+
+        return $directory;
     }
 }

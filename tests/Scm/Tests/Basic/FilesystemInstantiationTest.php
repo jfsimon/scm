@@ -10,7 +10,7 @@ class FilesystemInstantiationTest extends ScmTestCase
 {
     public function testInstantiations()
     {
-        $directory = $this->makeDirectory();
+        $directory = $this->makeTestDirectory();
         $file = $directory.'/empty-file';
         touch($file);
 

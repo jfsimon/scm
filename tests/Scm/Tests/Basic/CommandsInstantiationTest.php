@@ -14,7 +14,7 @@ class CommandsInstantiationTest extends ScmTestCase
     protected function intanciateClasses($namespace)
     {
         foreach($this->getClassesByNamespace($namespace) as $classname) {
-            $instance = new $classname($this->makeDirectory());
+            $instance = new $classname($this->makeTestDirectory());
         }
     }
 

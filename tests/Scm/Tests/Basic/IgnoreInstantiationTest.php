@@ -9,6 +9,6 @@ class IgnoreInstantiationTest extends ScmTestCase
 {
     public function testGitIgnoreInstantiation()
     {
-        $ign = new GitIgnore($this->makeDirectory());
+        $ign = new GitIgnore($this->makeTestDirectory());
     }
 }
