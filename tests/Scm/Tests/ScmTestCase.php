@@ -7,11 +7,20 @@ use Scm\Filesystem\Directory;
 
 class ScmTestCase extends \PHPUnit_Framework_TestCase
 {
-    const TEST_DIRECTORY = '/tmp/scm-tests';
+    protected $dataDir;
+    protected $testDir;
+
+    public function __construct($name=null)
+    {
+        parent::__construct($name);
+
+        $this->dataDir = realpath(__DIR__.'/../../../data/tests');
+        $this->testDir = '/tmp/scm-tests';
+    }
 
     protected function makeTestDirectory()
     {
-        $directory = self::TEST_DIRECTORY;
+        $directory = $this->testDir;
 
         if(realpath($directory)) {
             $dir = new Directory($directory);
@@ -45,7 +54,20 @@ class ScmTestCase extends \PHPUnit_Framework_TestCase
 
     protected function makeTestDirectoryStructure()
     {
-        $directory = self::DATA_DIR.'/directory';
+        $directory = $this->makeTestDirectory();
+
+        $dir = new Directory($this->dataDir.'/directory');
+        $dir->copy($this->makeTestDirectory());
+
+        mkdir($directory.'/folder1/folder12');
+        mkdir($directory.'/folder1/folder13');
+
+        return $directory;
+    }
+
+    protected function makeTestStringsFileStructure()
+    {
+        $directory = $this->dataDir.'/strings';
         copy($directory, $this->makeTestDirectory());
 
         return $directory;

@@ -21,32 +21,19 @@ class Directory
         $this->directory = realpath($directory);
     }
 
-    public function remove()
-    {
-        $this->removeDirectory();
-    }
-
     public function move($directory)
     {
         rename($this->directory, $this->getRealDirectory($directory));
     }
 
-    public function removeDirectory($directory=null)
+    public function copy($directory)
     {
-        $directory = $this->getRealDirectory($directory);
+        self::copyDirectory($this->directory, $this->getRealDirectory($directory));
+    }
 
-        $finder = new Finder();
-        $finder->in($directory);
-
-        foreach($finder->files() as $file) {
-            unlink($file);
-        }
-
-        foreach($finder->directories() as $dir) {
-            rmdir($dir);
-        }
-
-        rmdir($directory);
+    public function remove($directory=null)
+    {
+        self::removeDirectory($this->getRealDirectory($directory));
     }
 
     public function removeFiles(array $matches=array(), $directory=null)
@@ -85,6 +72,49 @@ class Directory
         }
 
         return true;
+    }
+
+    public static function copyDirectory($from, $to)
+    {
+        if(! file_exists($to)) {
+            mkdir($to);
+        };
+
+        $handle = opendir($from);
+
+        while($item = readdir($handle)) {
+            if($item=="." | $item=="..") continue;
+
+            if(is_dir($from.'/'.$item)) {
+                self::copyDirectory($from.'/'.$item, $to.'/'.$item);
+            } else {
+                copy($from.'/'.$item, $to.'/'.$item);
+            }
+        }
+
+        closedir($handle);
+    }
+
+    public static function removeDirectory($dir)
+    {
+        if(! file_exists($dir)) {
+            return;
+        };
+
+        $handle = opendir($dir);
+
+        while($item = readdir($handle)) {
+            if($item=="." | $item=="..") continue;
+
+            if(is_dir($dir.'/'.$item)) {
+                self::removeDirectory($dir.'/'.$item);
+            } else {
+                unlink($dir.'/'.$item);
+            }
+        }
+
+        rmdir($dir);
+        closedir($handle);
     }
 
     protected function getRealDirectory($directory)
