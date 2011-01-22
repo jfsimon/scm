@@ -19,5 +19,6 @@ class FetchTest extends ScmTestCase
         $fetch->execute();
         $this->assertFalse($dir->isEmpty());
         $this->assertEquals($repos, file_get_contents($dir->getPath().'/data/tests/repository'));
+        $dir->remove();
     }
 }

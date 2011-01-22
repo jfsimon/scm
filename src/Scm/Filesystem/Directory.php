@@ -74,6 +74,16 @@ class Directory
         return true;
     }
 
+    public function getPath()
+    {
+        return $this->directory;
+    }
+
+    public function __toString()
+    {
+        return $this->getPath();
+    }
+
     public static function copyDirectory($from, $to)
     {
         if(! file_exists($to)) {

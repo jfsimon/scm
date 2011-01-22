@@ -45,7 +45,7 @@ class Log implements \IteratorAggregate
 
     public function getIterator()
     {
-        return $this->entries;
+        return new \ArrayIterator($this->entries);
     }
 
     public function __toString()

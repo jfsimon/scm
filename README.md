@@ -1,7 +1,7 @@
 Control your SCM with PHP
 =========================
 
-A cross SCM systems (Git, Subversion, Mercurial) abstraction library written in PHP.
+A cross SCM systems (Git, *Subversion*, *Mercurial*) abstraction library written in PHP.
 
 **Biohazard : untested library, don't use at home**
 

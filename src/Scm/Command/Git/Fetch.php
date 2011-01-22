@@ -54,7 +54,7 @@ class Fetch extends Command implements CommandInterface
 
         $command .= ' '.$this->repository.' '.$this->directory;
 
-        return $this->runProcess($command);
+        return $this->runProcess($command, $processCallback);
     }
 
     protected function isRepository($directory=null)

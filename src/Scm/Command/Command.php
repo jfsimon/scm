@@ -2,12 +2,11 @@
 
 namespace Scm\Command;
 
-use Scm\Filesystem;
-
 use Scm\Executor\Executor;
 use Scm\Exception\PathNotFoundException;
 use Scm\Executor\LogEntry;
 use Scm\Filesystem\Directory;
+use Symfony\Component\Process\Process;
 
 abstract class Command extends Executor
 {
