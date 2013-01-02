@@ -16,7 +16,7 @@ How to use current implementation ?
 
 An exemple:
 
-    $repos = new Repository(Repôsitory::GIT, '/path/to/my/folder', array('verbose' => false));
+    $repos = new Repository(Repository::GIT, '/path/to/my/folder', array('verbose' => false));
     
     $repos
         ->setEnv(array('repository' => 'http://my/ditant/repository.git', 'branch' => 'master'))
